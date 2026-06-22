@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('client'); // Rol del usuario: 'admin' o 'client'. Por defecto, cliente.
             $table->rememberToken();
             $table->timestamps();
         });

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Permite asignar el rol al crear o actualizar un usuario.
     ];
 
     /**

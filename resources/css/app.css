@@ -1,11 +1,28 @@
 @import 'tailwindcss';
 
+/* Le decimos a Tailwind en qué archivos buscar las clases que usamos.
+   (Estas líneas ya venían de fábrica; no las tocamos.) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* =====================================================================
+   TEMA CORPORATIVO DE CONNERA SHOP
+   Aquí definimos los colores oficiales de la marca. Al declararlos así,
+   Tailwind crea automáticamente las clases para usarlos. Por ejemplo:
+       bg-connera-yellow  ->  fondo amarillo
+       text-connera-blue  ->  texto azul
+       bg-connera-bg      ->  fondo gris claro general
+   ===================================================================== */
 @theme {
+    /* --- Colores de marca (tomados de tu Documento Maestro) --- */
+    --color-connera-yellow: #FFD200;  /* Amarillo: color primario (botones y acentos) */
+    --color-connera-blue:   #003B73;  /* Azul: color secundario (encabezados y barras) */
+    --color-connera-bg:     #F5F7FA;  /* Fondo general claro de las páginas */
+    --color-connera-text:   #111827;  /* Texto principal (casi negro) */
+
+    /* --- Tipografía base (la que ya traía Laravel; se deja igual) --- */
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
