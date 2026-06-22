@@ -78,3 +78,13 @@ Route::post('/logout', function (Request $request) {
 Route::get('/dashboard', function () {
     return view('admin.dashboard'); // lo creamos en el siguiente paso
 })->middleware('auth')->name('dashboard');
+
+/* -------------------------------------------------------------------------
+   MÓDULO DE CATEGORÍAS (protegido: solo con sesión iniciada)
+   Esta sola línea crea TODAS las direcciones del módulo:
+   listar, crear, guardar, editar, actualizar y borrar.
+------------------------------------------------------------------------- */
+use App\Http\Controllers\Admin\CategoriaController;
+
+Route::resource('categorias', CategoriaController::class)
+     ->middleware('auth');
