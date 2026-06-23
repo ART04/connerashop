@@ -1,7 +1,7 @@
 {{-- 
   =====================================================================
   MOLDE DEL PANEL DE ADMINISTRACIÓN  ->  <x-admin-layout>
-  Menú lateral + barra superior + footer + alertas SweetAlert2.
+  Menú lateral + barra superior + footer + SweetAlert2 + DataTables.
   =====================================================================
 --}}
 <!DOCTYPE html>
@@ -13,8 +13,15 @@
     <title>{{ $title ?? 'Panel · Connera Shop' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- SweetAlert2: librería de alertas bonitas (CDN) --}}
+    {{-- SweetAlert2: alertas bonitas (CDN) --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- jQuery: requerido por DataTables (debe ir ANTES que DataTables) --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    {{-- DataTables: buscador, orden y paginacion para las tablas (CDN) --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css">
+    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
 </head>
 
 <body class="h-full bg-connera-bg text-connera-text antialiased">
@@ -38,15 +45,21 @@
                     Inicio
                 </a>
 
-                {{-- CATEGORÍAS (ya conectado) --}}
+                {{-- CATEGORÍAS --}}
                 <a href="{{ route('categorias.index') }}"
                    class="block px-4 py-2.5 rounded-lg transition
                           {{ request()->routeIs('categorias.*') ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                     Categorías
                 </a>
 
+                {{-- PRODUCTOS --}}
+                <a href="{{ route('productos.index') }}"
+                   class="block px-4 py-2.5 rounded-lg transition
+                          {{ request()->routeIs('productos.*') ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                    Productos
+                </a>
+
                 {{-- Próximos módulos --}}
-                <a href="#" class="block px-4 py-2.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">Productos</a>
                 <a href="#" class="block px-4 py-2.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">Marcas</a>
                 <a href="#" class="block px-4 py-2.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">Recursos</a>
             </nav>

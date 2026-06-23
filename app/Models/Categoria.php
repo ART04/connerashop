@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Modelo Categoria: representa una categoría del catálogo.
- * Es el "puente" entre tu código y la tabla 'categorias' de la base de datos.
+ * Modelo Categoria: representa una categoria del catalogo.
+ * Es el puente entre tu codigo y la tabla 'categorias'.
  */
 class Categoria extends Model
 {
-    // Le decimos a Laravel a qué tabla pertenece este modelo
     protected $table = 'categorias';
 
-    // Campos que se pueden guardar/editar de forma masiva (por seguridad)
     protected $fillable = [
         'nombre',
         'slug',
@@ -22,8 +20,17 @@ class Categoria extends Model
         'orden',
     ];
 
-    // Convierte 'activo' a verdadero/falso real al leerlo (en vez de 1/0)
     protected $casts = [
         'activo' => 'boolean',
     ];
+
+    /**
+     * RELACION: una categoria tiene muchos productos.
+     * Permite hacer  $categoria->productos  para ver todos
+     * los productos que pertenecen a esta categoria.
+     */
+    public function productos()
+    {
+        return $this->hasMany(Producto::class, 'categoria_id');
+    }
 }

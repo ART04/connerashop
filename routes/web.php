@@ -88,3 +88,10 @@ use App\Http\Controllers\Admin\CategoriaController;
 
 Route::resource('categorias', CategoriaController::class)
      ->middleware('auth');
+     /* -------------------------------------------------------------------------
+       MODULO DE PRODUCTOS (protegido)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\Admin\ProductoController;
+
+Route::resource('productos', ProductoController::class)
+     ->middleware('auth');
