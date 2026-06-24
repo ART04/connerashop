@@ -59,8 +59,14 @@
                     Productos
                 </a>
 
-                {{-- Próximos módulos --}}
-                <a href="#" class="block px-4 py-2.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">Marcas</a>
+                {{-- MARCAS (ya conectado) --}}
+                <a href="{{ route('marcas.index') }}"
+                   class="block px-4 py-2.5 rounded-lg transition
+                          {{ request()->routeIs('marcas.*') ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                    Marcas
+                </a>
+
+                {{-- Próximo módulo --}}
                 <a href="#" class="block px-4 py-2.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">Recursos</a>
             </nav>
 

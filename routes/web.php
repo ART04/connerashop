@@ -95,3 +95,11 @@ use App\Http\Controllers\Admin\ProductoController;
 
 Route::resource('productos', ProductoController::class)
      ->middleware('auth');
+
+/* -------------------------------------------------------------------------
+   MODULO DE MARCAS (protegido)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\Admin\MarcaController;
+
+Route::resource('marcas', MarcaController::class)
+     ->middleware('auth');
