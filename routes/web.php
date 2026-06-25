@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 | cada una. Por ahora: la página de inicio, el login y el panel del admin.
 */
 
-/* -------------------------------------------------------------------------
-   PÁGINA DE INICIO
-   Por ahora redirige al login. Más adelante será el catálogo público.
-------------------------------------------------------------------------- */
-Route::get('/', function () {
-    return redirect()->route('login');
-});
 
+/* -------------------------------------------------------------------------
+   SITIO PÚBLICO (lo que ven los clientes, sin necesidad de login)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\HomeController;
+
+// Pagina de inicio publica
+Route::get('/', [HomeController::class, 'index'])->name('home');
 /* -------------------------------------------------------------------------
    MOSTRAR EL FORMULARIO DE LOGIN
    Dirección:  /login   (cuando se visita, muestra la pantalla de acceso)

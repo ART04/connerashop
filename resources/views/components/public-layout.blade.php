@@ -1,0 +1,159 @@
+{{-- 
+  =====================================================================
+  MOLDE DEL SITIO PÚBLICO  ->  <x-public-layout>
+  La cara que ven los clientes: navbar arriba + footer.
+  Incluye cinta superior con fecha y tipo de cambio USD/MXN en vivo.
+  =====================================================================
+--}}
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $title ?? 'Connera Shop · Energía Renovable' }}</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- SweetAlert2 (para avisos en el sitio publico) --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="h-full bg-white text-connera-text antialiased flex flex-col min-h-screen">
+
+    {{-- ===================== BARRA SUPERIOR (NAVBAR) ===================== --}}
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+
+        {{-- Franja azul delgada superior: fecha + tipo de cambio + contacto --}}
+        <div class="bg-connera-blue text-white text-xs">
+            <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+                {{-- Fecha de hoy + tipo de cambio (se llenan con JavaScript) --}}
+                <span>
+                    <span id="cinta-fecha"></span>
+                    <span class="font-semibold ml-1">TC USD/MXN: <span id="cinta-dolar">...</span></span>
+                </span>
+                <span class="hidden sm:block">Tel: (000) 000 0000 · ventas@connerashop.com</span>
+            </div>
+        </div>
+
+        {{-- Navbar principal --}}
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+
+            {{-- Logo / nombre --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-2">
+                <span class="text-2xl font-bold text-connera-blue">Connera</span>
+                <span class="text-2xl font-bold text-connera-yellow">Shop</span>
+            </a>
+
+            {{-- Menu de navegacion --}}
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-connera-text">
+                <a href="{{ route('home') }}" class="hover:text-connera-blue transition">Inicio</a>
+                <a href="#" class="hover:text-connera-blue transition">Productos</a>
+                <a href="#" class="hover:text-connera-blue transition">Marcas</a>
+                <a href="#" class="hover:text-connera-blue transition">Contacto</a>
+            </nav>
+
+            {{-- Boton de acceso clientes --}}
+            <div class="flex items-center gap-3">
+                <a href="#" class="text-sm font-medium text-connera-blue hover:underline">Iniciar sesión</a>
+                <a href="#" class="bg-connera-yellow text-connera-blue text-sm font-bold px-4 py-2 rounded-lg hover:brightness-95 transition">
+                    Cotizar
+                </a>
+            </div>
+        </div>
+    </header>
+
+    {{-- ===================== CONTENIDO DE CADA PÁGINA ===================== --}}
+    <main class="flex-1">
+        {{ $slot }}
+    </main>
+
+    {{-- ===================== PIE DE PÁGINA PÚBLICO ===================== --}}
+    <footer class="bg-connera-blue text-white mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <div>
+                <h3 class="text-lg font-bold mb-2">Connera Shop</h3>
+                <p class="text-sm text-white/70">
+                    Tu proveedor de soluciones en energía renovable.
+                    Paneles, inversores y más.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-2">Enlaces</h4>
+                <ul class="space-y-1 text-sm text-white/70">
+                    <li><a href="{{ route('home') }}" class="hover:text-white">Inicio</a></li>
+                    <li><a href="#" class="hover:text-white">Productos</a></li>
+                    <li><a href="#" class="hover:text-white">Marcas</a></li>
+                    <li><a href="#" class="hover:text-white">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-2">Contacto</h4>
+                <ul class="space-y-1 text-sm text-white/70">
+                    <li>Tel: (000) 000 0000</li>
+                    <li>ventas@connerashop.com</li>
+                    <li>Tabasco, México</li>
+                </ul>
+            </div>
+        </div>
+
+        {{-- Franja inferior con creditos --}}
+        <div class="border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-white/50">
+                <span>© {{ date('Y') }} Connera Shop. Todos los derechos reservados.</span>
+                <span>
+                    Desarrollado por
+                    <a href="https://prowebsoluciones.org/" target="_blank" rel="noopener" class="text-connera-yellow hover:underline">
+                        ProWeb Soluciones
+                    </a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    {{-- ===================== CINTA: FECHA + DÓLAR EN VIVO ===================== --}}
+    <script>
+        // 1) Poner la fecha de hoy en espanol (ej: "Mar, 23 Junio 2026")
+        function ponerFecha() {
+            const ahora = new Date();
+            const dias  = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const texto = dias[ahora.getDay()] + ', ' + ahora.getDate() + ' ' +
+                          meses[ahora.getMonth()] + ' ' + ahora.getFullYear();
+            document.getElementById('cinta-fecha').textContent = texto;
+        }
+
+        // 2) Traer el tipo de cambio USD -> MXN de una API gratis (sin clave)
+        function ponerDolar() {
+            fetch('https://open.er-api.com/v6/latest/USD')
+                .then(function (respuesta) { return respuesta.json(); })
+                .then(function (datos) {
+                    if (datos && datos.rates && datos.rates.MXN) {
+                        // Mostramos con 2 decimales (ej: 17.55)
+                        document.getElementById('cinta-dolar').textContent = datos.rates.MXN.toFixed(2);
+                    } else {
+                        document.getElementById('cinta-dolar').textContent = 'N/D';
+                    }
+                })
+                .catch(function () {
+                    // Si falla la conexion, mostramos N/D sin romper nada
+                    document.getElementById('cinta-dolar').textContent = 'N/D';
+                });
+        }
+
+        ponerFecha();
+        ponerDolar();
+    </script>
+
+    {{-- Avisos SweetAlert para el sitio publico --}}
+    @if (session('exito'))
+        <script>
+            Swal.fire({ icon: 'success', title: '¡Listo!', text: @json(session('exito')), confirmButtonColor: '#003B73' });
+        </script>
+    @endif
+
+</body>
+</html>
