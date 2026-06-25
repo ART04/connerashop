@@ -26,6 +26,26 @@ Route::get('/producto/{slug}', [HomeController::class, 'producto'])->name('produ
 Route::get('/catalogo', [HomeController::class, 'catalogo'])->name('catalogo');
 
 /* -------------------------------------------------------------------------
+   ACCESO DE CLIENTES (registro, login, panel)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\ClienteAuthController;
+
+// Registro
+Route::get('/registro', [ClienteAuthController::class, 'mostrarRegistro'])->name('cliente.registro');
+Route::post('/registro', [ClienteAuthController::class, 'registrar'])->name('cliente.registro.store');
+
+// Login de cliente
+Route::get('/cliente/login', [ClienteAuthController::class, 'mostrarLogin'])->name('cliente.login');
+Route::post('/cliente/login', [ClienteAuthController::class, 'login'])->name('cliente.login.store');
+
+// Logout de cliente
+Route::post('/cliente/logout', [ClienteAuthController::class, 'logout'])->name('cliente.logout');
+
+// Panel del cliente (protegido: requiere sesion)
+Route::get('/cliente', [ClienteAuthController::class, 'panel'])
+     ->middleware('auth')->name('cliente.panel');
+
+/* -------------------------------------------------------------------------
    MOSTRAR EL FORMULARIO DE LOGIN
    Dirección:  /login   (cuando se visita, muestra la pantalla de acceso)
    El nombre 'login' es el que usa el formulario en action="{{ route('login') }}".
