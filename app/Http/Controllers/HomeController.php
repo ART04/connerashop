@@ -8,20 +8,21 @@ use App\Models\Categoria;
 
 /**
  * Controlador del SITIO PÚBLICO.
- * Prepara la informacion que veran los visitantes en la home.
+ * Prepara la informacion que veran los visitantes.
  */
 class HomeController extends Controller
 {
+    /**
+     * HOME publica.
+     */
     public function index()
     {
-        // Productos destacados y activos (para la seccion principal)
         $destacados = Producto::where('activo', true)
                         ->where('destacado', true)
                         ->orderBy('orden')
                         ->take(8)
                         ->get();
 
-        // Si no hay destacados, mostramos los productos activos mas recientes
         if ($destacados->isEmpty()) {
             $destacados = Producto::where('activo', true)
                             ->latest()
@@ -29,16 +30,33 @@ class HomeController extends Controller
                             ->get();
         }
 
-        // Marcas activas (para el carrusel de logos)
         $marcas = Marca::where('activo', true)
                     ->orderBy('orden')
                     ->get();
 
-        // Categorias activas (por si las mostramos)
         $categorias = Categoria::where('activo', true)
                         ->orderBy('orden')
                         ->get();
 
         return view('public.home', compact('destacados', 'marcas', 'categorias'));
+    }
+
+    /**
+     * FICHA publica de un producto (se busca por su slug).
+     */
+    public function producto(string $slug)
+    {
+        // Buscar el producto activo con ese slug. Si no existe, error 404.
+        $producto = Producto::where('slug', $slug)
+                        ->where('activo', true)
+                        ->with(['categoria', 'especificaciones', 'documentos'])
+                        ->firstOrFail();
+
+        // Marcas para el carrusel (igual que en la home)
+        $marcas = Marca::where('activo', true)
+                    ->orderBy('orden')
+                    ->get();
+
+        return view('public.producto', compact('producto', 'marcas'));
     }
 }

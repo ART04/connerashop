@@ -22,7 +22,6 @@
                 </div>
             </div>
             <div class="hidden md:flex justify-center">
-                {{-- Icono decorativo de sol --}}
                 <div class="text-[12rem] leading-none">☀️</div>
             </div>
         </div>
@@ -40,15 +39,15 @@
                 @foreach ($destacados as $producto)
                     {{-- TARJETA DE PRODUCTO --}}
                     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden border border-gray-100">
-                        {{-- Foto --}}
-                        <div class="aspect-square bg-gray-50 flex items-center justify-center p-4">
+                        {{-- Foto (clic lleva a la ficha) --}}
+                        <a href="{{ route('producto.show', $producto->slug) }}" class="block aspect-square bg-gray-50 flex items-center justify-center p-4">
                             @if ($producto->imagen)
                                 <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}"
                                      class="max-h-full max-w-full object-contain">
                             @else
                                 <div class="text-gray-300 text-sm">Sin imagen</div>
                             @endif
-                        </div>
+                        </a>
                         {{-- Info --}}
                         <div class="p-4">
                             @if ($producto->categoria)
@@ -58,7 +57,7 @@
                             @if ($producto->precio > 0)
                                 <p class="text-lg font-bold text-connera-blue mt-2">${{ number_format($producto->precio, 2) }}</p>
                             @endif
-                            <a href="#" class="block text-center bg-connera-yellow text-connera-blue font-bold py-2 rounded-lg mt-3 hover:brightness-95 transition">
+                            <a href="{{ route('producto.show', $producto->slug) }}" class="block text-center bg-connera-yellow text-connera-blue font-bold py-2 rounded-lg mt-3 hover:brightness-95 transition">
                                 Ver detalles
                             </a>
                         </div>

@@ -20,6 +20,8 @@ use App\Http\Controllers\HomeController;
 
 // Pagina de inicio publica
 Route::get('/', [HomeController::class, 'index'])->name('home');
+// Ficha publica de un producto (se identifica por su slug amigable)
+Route::get('/producto/{slug}', [HomeController::class, 'producto'])->name('producto.show');
 /* -------------------------------------------------------------------------
    MOSTRAR EL FORMULARIO DE LOGIN
    Dirección:  /login   (cuando se visita, muestra la pantalla de acceso)
