@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Models\Marca;
 use App\Models\Categoria;
+use Illuminate\Http\Request;
 
 /**
  * Controlador del SITIO PÚBLICO.
@@ -46,17 +47,51 @@ class HomeController extends Controller
      */
     public function producto(string $slug)
     {
-        // Buscar el producto activo con ese slug. Si no existe, error 404.
         $producto = Producto::where('slug', $slug)
                         ->where('activo', true)
                         ->with(['categoria', 'especificaciones', 'documentos'])
                         ->firstOrFail();
 
-        // Marcas para el carrusel (igual que en la home)
         $marcas = Marca::where('activo', true)
                     ->orderBy('orden')
                     ->get();
 
         return view('public.producto', compact('producto', 'marcas'));
+    }
+
+    /**
+     * CATÁLOGO publico: lista todos los productos activos, con filtros.
+     */
+    public function catalogo(Request $request)
+    {
+        // Empezamos con los productos activos, trayendo su categoria
+        $consulta = Producto::where('activo', true)->with('categoria');
+
+        // FILTRO: por texto de busqueda (nombre o marca)
+        if ($request->filled('buscar')) {
+            $texto = $request->input('buscar');
+            $consulta->where(function ($q) use ($texto) {
+                $q->where('nombre', 'like', "%{$texto}%")
+                  ->orWhere('marca', 'like', "%{$texto}%");
+            });
+        }
+
+        // FILTRO: por categoria (usamos el id de la categoria)
+        if ($request->filled('categoria')) {
+            $consulta->where('categoria_id', $request->input('categoria'));
+        }
+
+        // Ordenar y traer los resultados (paginados de 12 en 12)
+        $productos = $consulta->orderBy('orden')
+                        ->orderBy('nombre')
+                        ->paginate(12)
+                        ->withQueryString(); // conserva los filtros al cambiar de pagina
+
+        // Categorias para el menu de filtros
+        $categorias = Categoria::where('activo', true)
+                        ->orderBy('nombre')
+                        ->get();
+
+        return view('public.catalogo', compact('productos', 'categorias'));
     }
 }

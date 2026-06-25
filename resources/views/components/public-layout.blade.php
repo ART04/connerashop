@@ -26,7 +26,6 @@
         {{-- Franja azul delgada superior: fecha + tipo de cambio + contacto --}}
         <div class="bg-connera-blue text-white text-xs">
             <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-                {{-- Fecha de hoy + tipo de cambio (se llenan con JavaScript) --}}
                 <span>
                     <span id="cinta-fecha"></span>
                     <span class="font-semibold ml-1">TC USD/MXN: <span id="cinta-dolar">...</span></span>
@@ -47,7 +46,7 @@
             {{-- Menu de navegacion --}}
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-connera-text">
                 <a href="{{ route('home') }}" class="hover:text-connera-blue transition">Inicio</a>
-                <a href="#" class="hover:text-connera-blue transition">Productos</a>
+                <a href="{{ route('catalogo') }}" class="hover:text-connera-blue transition">Productos</a>
                 <a href="#" class="hover:text-connera-blue transition">Marcas</a>
                 <a href="#" class="hover:text-connera-blue transition">Contacto</a>
             </nav>
@@ -83,7 +82,7 @@
                 <h4 class="font-semibold mb-2">Enlaces</h4>
                 <ul class="space-y-1 text-sm text-white/70">
                     <li><a href="{{ route('home') }}" class="hover:text-white">Inicio</a></li>
-                    <li><a href="#" class="hover:text-white">Productos</a></li>
+                    <li><a href="{{ route('catalogo') }}" class="hover:text-white">Productos</a></li>
                     <li><a href="#" class="hover:text-white">Marcas</a></li>
                     <li><a href="#" class="hover:text-white">Contacto</a></li>
                 </ul>
@@ -115,7 +114,6 @@
 
     {{-- ===================== CINTA: FECHA + DÓLAR EN VIVO ===================== --}}
     <script>
-        // 1) Poner la fecha de hoy en espanol (ej: "Mar, 23 Junio 2026")
         function ponerFecha() {
             const ahora = new Date();
             const dias  = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
@@ -126,20 +124,17 @@
             document.getElementById('cinta-fecha').textContent = texto;
         }
 
-        // 2) Traer el tipo de cambio USD -> MXN de una API gratis (sin clave)
         function ponerDolar() {
             fetch('https://open.er-api.com/v6/latest/USD')
                 .then(function (respuesta) { return respuesta.json(); })
                 .then(function (datos) {
                     if (datos && datos.rates && datos.rates.MXN) {
-                        // Mostramos con 2 decimales (ej: 17.55)
                         document.getElementById('cinta-dolar').textContent = datos.rates.MXN.toFixed(2);
                     } else {
                         document.getElementById('cinta-dolar').textContent = 'N/D';
                     }
                 })
                 .catch(function () {
-                    // Si falla la conexion, mostramos N/D sin romper nada
                     document.getElementById('cinta-dolar').textContent = 'N/D';
                 });
         }

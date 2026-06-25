@@ -22,6 +22,9 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Ficha publica de un producto (se identifica por su slug amigable)
 Route::get('/producto/{slug}', [HomeController::class, 'producto'])->name('producto.show');
+// Catalogo publico: todos los productos con filtros
+Route::get('/catalogo', [HomeController::class, 'catalogo'])->name('catalogo');
+
 /* -------------------------------------------------------------------------
    MOSTRAR EL FORMULARIO DE LOGIN
    Dirección:  /login   (cuando se visita, muestra la pantalla de acceso)
