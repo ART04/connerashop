@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Cotizacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
  * Controlador de acceso para CLIENTES (sitio publico).
- * Maneja registro, login y logout de los clientes (role = 'client').
+ * Maneja registro, login, logout y el panel del cliente.
  */
 class ClienteAuthController extends Controller
 {
@@ -24,7 +25,7 @@ class ClienteAuthController extends Controller
     // Guardar el nuevo cliente
     public function registrar(Request $request)
     {
-        // 1) Validar los datos
+        // 1) Validar los datos que llegan del formulario
         $datos = $request->validate([
             'name'             => ['required', 'string', 'max:255'],
             'apellido'         => ['nullable', 'string', 'max:255'],
@@ -83,7 +84,7 @@ class ClienteAuthController extends Controller
             return redirect()->route('cliente.panel');
         }
 
-        // Si fallo
+        // Si fallo, regresar con error
         return back()->withErrors([
             'email' => 'Correo o contraseña incorrectos.',
         ])->onlyInput('email');
@@ -103,6 +104,13 @@ class ClienteAuthController extends Controller
 
     public function panel()
     {
-        return view('public.cliente.panel');
+        // Traemos las cotizaciones del cliente logueado (las mas recientes primero)
+        // Cargamos tambien sus items (productos) para mostrarlos
+        $cotizaciones = Cotizacion::where('user_id', Auth::id())
+                            ->with('items')
+                            ->latest()
+                            ->get();
+
+        return view('public.cliente.panel', compact('cotizaciones'));
     }
 }

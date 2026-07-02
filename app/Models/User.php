@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Campos que se pueden guardar de forma masiva.
-     */
     protected $fillable = [
         'name',
         'apellido',
@@ -27,22 +24,24 @@ class User extends Authenticatable
         'estatus',
     ];
 
-    /**
-     * Campos que se ocultan al convertir a array/JSON (seguridad).
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Conversiones automaticas de tipo.
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Un usuario (cliente) tiene muchas cotizaciones.
+     */
+    public function cotizaciones()
+    {
+        return $this->hasMany(Cotizacion::class, 'user_id');
     }
 }

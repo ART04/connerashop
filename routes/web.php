@@ -44,6 +44,17 @@ Route::post('/cliente/logout', [ClienteAuthController::class, 'logout'])->name('
 // Panel del cliente (protegido: requiere sesion)
 Route::get('/cliente', [ClienteAuthController::class, 'panel'])
      ->middleware('auth')->name('cliente.panel');
+/* -------------------------------------------------------------------------
+   COTIZACIONES (lado cliente)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\CotizacionController;
+
+// Formulario para cotizar un producto
+Route::get('/cotizar/{slug}', [CotizacionController::class, 'crear'])->name('cotizacion.crear');
+Route::post('/cotizar/{slug}', [CotizacionController::class, 'guardar'])->name('cotizacion.guardar');
+
+// Pagina de agradecimiento
+Route::get('/cotizacion/gracias/{folio}', [CotizacionController::class, 'gracias'])->name('cotizacion.gracias');
 
 /* -------------------------------------------------------------------------
    MOSTRAR EL FORMULARIO DE LOGIN
@@ -128,3 +139,26 @@ use App\Http\Controllers\Admin\MarcaController;
 
 Route::resource('marcas', MarcaController::class)
      ->middleware('auth');
+
+/* -------------------------------------------------------------------------
+   MODULO DE COTIZACIONES - ADMIN (protegido)
+------------------------------------------------------------------------- */
+use App\Http\Controllers\Admin\CotizacionAdminController;
+
+Route::middleware('auth')->group(function () {
+    // Lista de cotizaciones recibidas
+    Route::get('/admin/cotizaciones', [CotizacionAdminController::class, 'index'])
+         ->name('admin.cotizaciones.index');
+
+    // Ver detalle de una cotizacion
+    Route::get('/admin/cotizaciones/{cotizacion}', [CotizacionAdminController::class, 'show'])
+         ->name('admin.cotizaciones.show');
+
+    // Cambiar el estado de una cotizacion
+    Route::put('/admin/cotizaciones/{cotizacion}/estado', [CotizacionAdminController::class, 'actualizarEstado'])
+         ->name('admin.cotizaciones.estado');
+
+    // Borrar una cotizacion
+    Route::delete('/admin/cotizaciones/{cotizacion}', [CotizacionAdminController::class, 'destroy'])
+         ->name('admin.cotizaciones.destroy');
+});

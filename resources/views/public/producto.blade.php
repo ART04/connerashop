@@ -1,9 +1,10 @@
+
 {{-- FICHA PÚBLICA DE UN PRODUCTO (estilo CONNERA: imagen + info + pestañas) --}}
 <x-public-layout>
 
     <div class="max-w-7xl mx-auto px-4 py-10">
 
-        {{-- Migaja de navegacion --}}
+        {{-- Migaja de navegacion (Inicio / Categoria / Producto) --}}
         <nav class="text-sm text-gray-500 mb-6">
             <a href="{{ route('home') }}" class="hover:text-connera-blue">Inicio</a>
             <span class="mx-2">/</span>
@@ -17,7 +18,7 @@
         {{-- ===================== PARTE SUPERIOR: IMAGEN + INFO ===================== --}}
         <div class="grid md:grid-cols-2 gap-10 mb-12">
 
-            {{-- Imagen del producto (clic para ver en grande) --}}
+            {{-- Imagen del producto (al hacer clic se ve en grande) --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex items-center justify-center">
                 @if ($producto->imagen)
                     <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}"
@@ -53,9 +54,13 @@
 
                 {{-- Botones de accion --}}
                 <div class="flex flex-wrap gap-3 mb-6">
-                    <a href="#" class="bg-connera-yellow text-connera-blue font-bold px-6 py-3 rounded-lg hover:brightness-95 transition">
+                    {{-- BOTON DE COTIZAR: lleva al formulario de cotizacion de este producto --}}
+                    <a href="{{ route('cotizacion.crear', $producto->slug) }}"
+                       class="bg-connera-yellow text-connera-blue font-bold px-6 py-3 rounded-lg hover:brightness-95 transition">
                         Solicitar cotización
                     </a>
+
+                    {{-- Enlaces externos (solo si el producto los tiene) --}}
                     @if ($producto->enlace_amazon)
                         <a href="{{ $producto->enlace_amazon }}" target="_blank" rel="noopener"
                            class="border border-gray-300 text-connera-text font-medium px-6 py-3 rounded-lg hover:bg-gray-50 transition">
@@ -73,7 +78,7 @@
         </div>
 
         {{-- ===================== PESTAÑAS (Características / Documentos) ===================== --}}
-        {{-- Cambiamos de pestaña con JavaScript simple (sin depender de Alpine) --}}
+        {{-- El cambio de pestaña se hace con JavaScript simple (ver script abajo) --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
             {{-- Cabecera de pestañas --}}
@@ -88,7 +93,7 @@
                 </button>
             </div>
 
-            {{-- Contenido: CARACTERÍSTICAS --}}
+            {{-- Contenido: CARACTERÍSTICAS (tabla de especificaciones) --}}
             <div id="panel-caracteristicas" class="panel-tab p-6">
                 @if ($producto->especificaciones->count())
                     <table class="w-full text-left">
@@ -106,7 +111,7 @@
                 @endif
             </div>
 
-            {{-- Contenido: DOCUMENTOS (oculto al inicio) --}}
+            {{-- Contenido: DOCUMENTOS (oculto al inicio, se muestra al dar clic en la pestaña) --}}
             <div id="panel-documentos" class="panel-tab p-6 hidden">
                 @if ($producto->documentos->count())
                     <div class="grid sm:grid-cols-2 gap-3">
@@ -152,6 +157,7 @@
 
     {{-- ===================== SCRIPT: zoom de la imagen ===================== --}}
     <script>
+        // Al hacer clic en la foto del producto, se abre en grande con SweetAlert
         document.querySelectorAll('.ver-imagen').forEach(function (img) {
             img.addEventListener('click', function () {
                 Swal.fire({

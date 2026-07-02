@@ -59,11 +59,19 @@
                     Productos
                 </a>
 
-                {{-- MARCAS (ya conectado) --}}
+                {{-- MARCAS --}}
                 <a href="{{ route('marcas.index') }}"
                    class="block px-4 py-2.5 rounded-lg transition
                           {{ request()->routeIs('marcas.*') ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                     Marcas
+                </a>
+
+                {{-- COTIZACIONES (ya conectado) --}}
+                {{-- Aqui llegan las solicitudes de cotizacion de los clientes --}}
+                <a href="{{ route('admin.cotizaciones.index') }}"
+                   class="block px-4 py-2.5 rounded-lg transition
+                          {{ request()->routeIs('admin.cotizaciones.*') ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                    Cotizaciones
                 </a>
 
                 {{-- Próximo módulo --}}
